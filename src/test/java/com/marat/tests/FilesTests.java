@@ -78,7 +78,7 @@ public class FilesTests {
     }
 
     @Test
-    public void zipTest() throws IOException {
+    public void zipWithFileTest() throws IOException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         String entryAsString = null;
         try (ZipInputStream stream = new ZipInputStream(classLoader.getResourceAsStream("zip/file_zip.zip"))) {
