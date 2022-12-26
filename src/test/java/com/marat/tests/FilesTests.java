@@ -2,11 +2,19 @@ package com.marat.tests;
 
 import com.codeborne.pdftest.PDF;
 import com.codeborne.xlstest.XLS;
+import org.apache.commons.io.IOUtils;
+import org.apache.poi.hwpf.HWPFDocument;
+import org.apache.poi.hwpf.extractor.WordExtractor;
+import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -41,6 +49,7 @@ public class FilesTests {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         InputStream stream = classLoader.getResourceAsStream("file_txt.txt");
         String txt = new String(stream.readAllBytes());
+        System.out.println(txt);
         Assertions.assertTrue(txt.contains("Quod equidem non reprehendo;"));
     }
 
@@ -48,17 +57,37 @@ public class FilesTests {
     public void docTest() throws IOException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         InputStream stream = classLoader.getResourceAsStream("file_doc.doc");
-        String doc = new String(stream.readAllBytes());
-        System.out.println(doc);
-        Assertions.assertTrue(doc.contains("Curabitur bibendum ante urna, sed blandit libero egestas id."));
+        WordExtractor extractor;
+        HWPFDocument document = new HWPFDocument(stream);
+        extractor = new WordExtractor(document);
+        String s = new String(extractor.getText().getBytes(StandardCharsets.UTF_8));
+        System.out.println(s);
+        assertThat(s).contains("Curabitur bibendum ante urna");
     }
 
     @Test
-    public void docxTest() throws IOException {
+    public void docxTest() throws Exception {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         InputStream stream = classLoader.getResourceAsStream("file_docx.docx");
-        String docx = new String(stream.readAllBytes());
-        Assertions.assertTrue(docx.contains("Авторизация"));
+        XWPFWordExtractor extractor;
+        XWPFDocument document = new XWPFDocument(stream);
+        extractor = new XWPFWordExtractor(document);
+        String s = new String(extractor.getText().getBytes(StandardCharsets.UTF_8));
+        System.out.println(s);
+        Assertions.assertTrue(s.contains("Sit sane ista voluptas"));
+    }
+
+    @Test
+    public void zipTest() throws IOException {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        String entryAsString = null;
+        try (ZipInputStream stream = new ZipInputStream(classLoader.getResourceAsStream("zip/file_zip.zip"))) {
+            ZipEntry entry;
+            while ((entry = stream.getNextEntry()) != null) {
+                entryAsString = IOUtils.toString(stream, StandardCharsets.UTF_8);
+            }
+            Assertions.assertTrue(entryAsString.contains("Nihil sane"));
+        }
     }
 }
 
