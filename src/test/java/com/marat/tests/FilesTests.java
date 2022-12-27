@@ -3,7 +3,6 @@ package com.marat.tests;
 import com.codeborne.pdftest.PDF;
 import com.codeborne.xlstest.XLS;
 
-import net.lingala.zip4j.ZipFile;
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.hwpf.extractor.WordExtractor;
