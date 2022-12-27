@@ -2,6 +2,8 @@ package com.marat.tests;
 
 import com.codeborne.pdftest.PDF;
 import com.codeborne.xlstest.XLS;
+
+import net.lingala.zip4j.ZipFile;
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.hwpf.extractor.WordExtractor;
@@ -81,7 +83,7 @@ public class FilesTests {
     public void zipWithFileTest() throws IOException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         String entryAsString = null;
-        try (ZipInputStream stream = new ZipInputStream(classLoader.getResourceAsStream("zip/file_zip.zip"))) {
+        try (ZipInputStream stream = new ZipInputStream(classLoader.getResourceAsStream("zip_file/file_zip.zip"))) {
             ZipEntry entry;
             while ((entry = stream.getNextEntry()) != null) {
                 entryAsString = IOUtils.toString(stream, StandardCharsets.UTF_8);

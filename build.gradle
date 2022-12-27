@@ -10,8 +10,9 @@ def selenideVersion = '6.10.3',
     junitVersion = '5.9.0'
 
 dependencies {
-    testImplementation (
+    testImplementation(
             "com.codeborne:selenide:$selenideVersion",
+            'net.lingala.zip4j:zip4j:2.11.2', //zip with pass
             'com.codeborne:pdf-test:1.7.0',
             'com.codeborne:xls-test:1.6.0',
             'com.opencsv:opencsv:5.7.1',
